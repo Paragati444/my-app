@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #007bff; color: white; }
+        .btn { padding: 10px 15px; background: green; color: white; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <h2>Employee List</h2>
+    <a href="add-employee.html" class="btn">Add New Employee</a>
+
+    <table id="empTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone No</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+
+    <script>
+        // API कडून डेटा आणण्यासाठी
+        fetch('http://localhost:9090/api/v1/employees')
+            .then(response => response.json())
+            .then(data => {
+                let rows = "";
+                data.forEach(emp => {
+                    rows += `<tr>
+                        <td>${emp.name}</td>
+                        <td>${emp.email}</td>
+                        <td>${emp.phoneno}</td>
+                    </tr>`;
+                });
+                document.querySelector("#empTable tbody").innerHTML = rows;
+            });
+    </script>
+</body>
+</html>

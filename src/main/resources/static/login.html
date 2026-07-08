@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            width: 350px;
+            padding: 40px;
+            background: #fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 25px;
+            color: #333;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box; /* यामुळे इनपुट बॉक्स बाहेर जाणार नाही */
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        #errorMsg {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-size: 14px;
+            display: none; /* सुरुवातीला लपवलेले */
+        }
+        .register-link {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .register-link a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+
+        <div id="errorMsg">Invalid Username or Password!</div>
+
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Email Address" required />
+            <input type="password" id="password" placeholder="Phone Number" required />
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="register-link">
+            <a href="register.html">Don't have an account? Register</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(e) {
+            e.preventDefault(); // फॉर्म आपोआप सबमिट होण्यापासून रोखण्यासाठी
+
+            const errorDiv = document.getElementById("errorMsg");
+            errorDiv.style.display = "none"; // आधीचा एरर लपवा
+
+            // इनपुट व्हॅल्यूज मिळवा
+            const emailValue = document.getElementById("username").value;
+            const phoneValue = document.getElementById("password").value;
+
+            // Spring Boot Controller ला पाठवण्यासाठी डेटा (JSON)
+            const loginData = {
+                email: emailValue,
+                phoneno: phoneValue
+            };
+
+            // API Call (तुमच्या कंट्रोलर मधील /loginCheck कडे)
+            fetch("http://localhost:9090/api/v1/loginCheck", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(loginData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Login Successful! Redirecting...");
+                    window.location.href = "index.html"; // लॉगिन झाल्यावर या पेजवर जा
+                } else {
+                    // जर 401 किंवा इतर एरर आला तर
+                    errorDiv.style.display = "block";
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Server is not responding. Please check if Spring Boot is running.");
+            });
+        });
+    </script>
+</body>
+</html>

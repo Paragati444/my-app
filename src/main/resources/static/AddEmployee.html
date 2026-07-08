@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Employee</title>
+    <style>
+        input { display: block; width: 300px; margin: 10px 0; padding: 8px; }
+        button { padding: 10px 20px; background: blue; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>Add New Employee</h2>
+    <form id="empForm">
+        <input type="text" id="name" placeholder="Enter Name" required>
+        <input type="email" id="email" placeholder="Enter Email" required>
+        <input type="text" id="phoneno" placeholder="Enter Phone Number" required>
+        <button type="submit">Save Employee</button>
+    </form>
+
+    <script>
+        document.getElementById("empForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const empData = {
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                phoneno: document.getElementById("phoneno").value
+            };
+
+            fetch('http://localhost:9090/api/v1/employees', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(empData)
+            })
+            .then(res => {
+                alert("Saved Successfully!");
+                window.location.href = "index.html"; // सेव्ह झाल्यावर परत लिस्टवर जा
+            });
+        });
+    </script>
+</body>
+</html>
